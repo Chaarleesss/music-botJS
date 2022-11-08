@@ -12,7 +12,6 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates],
 });
 
-// List of all commands
 const commands = [];
 client.commands = new Collection();
 
@@ -26,7 +25,6 @@ for (const file of commandFiles) {
   commands.push(command.data.toJSON());
 }
 
-// Add the player on the client
 client.player = new Player(client, {
   ytdlOptions: {
     quality: "highestaudio",
@@ -35,7 +33,6 @@ client.player = new Player(client, {
 });
 
 client.on("ready", () => {
-  // Get all ids of the servers
   const guild_ids = client.guilds.cache.map((guild) => guild.id);
 
   const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
@@ -57,7 +54,7 @@ client.on("interactionCreate", async (interaction) => {
     await command.execute({ client, interaction });
   } catch (error) {
     console.error(error);
-    await interaction.reply({ content: "There was an error executing this command" });
+    await interaction.channel.send({ content: "There was an error executing this command" });
   }
 });
 
